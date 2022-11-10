@@ -14,15 +14,28 @@
 
 main: 
     # get input
-    li  $v0, 5                          # set system call code to "read integer"
+    li  $v0, 5							  # set system call code to "read integer"
     syscall                             # read integer from standard input stream to $v0
+    jal printOutput
 
     # calculate output
-    mul $a0, $v0, $v0                   # $a0 = $v0 * $v0
+    #mul $a0, $v0, $v0                   # $a0 = $v0 * $v0
+ 
+printOutput:
+	
+	li $t0, 10
+	li $t1, 0
+	
+	loop: 
+		addi $v0, $t1, 1
+		beq $t0, $v0, loop 
 
     # print output
-    li  $v0, 1                          # set system call code to "print integer"
+    li $v0, 1                          # set system call code to "print integer"
     syscall                             # print square of input integer to output stream
+    
+    li $v0, 10                          # system call code for exit
+    syscall
 
 ##################################################################
 #
@@ -30,3 +43,4 @@ main:
 #       The Executable Code Section is the default section. Therefore ".text" isn't needed.
 #
 ##################################################################
+ 
