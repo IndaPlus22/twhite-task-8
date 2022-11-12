@@ -1,42 +1,49 @@
-# int multiply(int a, int b) {
-#   int i, sum = 0;
-#   for (i = 0; i < a; i++)
-#   	sum += b;
-#    return sum;
-#}
-
-# int faculty(int n) {
-#   int i, fac = 1;
-#   for (i = n; i > 1; i--)
-#        fac = multiply(fac, i);
-#    return fac;
-#}
-
 main: 
-	li $a0 5
-	li $a1 6
+	li, $a0, 5
+	li, $a1, 6
 		jal multiply
+	move $a0, $v0
 	li $v0, 1
 	syscall
 	
+	li $a1, 5
+		jal faculty
+		move $a0, $v0
+	li $v0, 1
+	syscall
+	j exit
+	
+exit:
 	li $v0, 10                          # system call code for exit
     syscall
-	
 
 multiply:
+	move $t1, $a0
+	move $t2, $a1
+	li $t0, 0
+	li $t3, 0
 	
-	li $t0, 0			#initialize increment index as 0
-	li $s0, 0			#initialize sum as 0
-	
-	loop:
-		add $s0, $v0, $0			#add first integer to the sum
-		add $t0, $t0, 1					#increment index 
-		beq $t0, $a1, loop		#While the index is not equal to 
-	
-	jr $ra
-	nop
+	multiply_loop:
+		add $t3, $t3, $t2			#add second integer to the sum
+		addi $t0, $t0, 1					#increment index 
+		bne $t0, $t1, multiply_loop		#Loop until the index is equal to the first number 
+		move $v0, $t3
+		jr $ra
 	
 faculty:
+	li $a0, 1
+	la $t9, ($ra)
+	
+		faculty_loop:
+			jal multiply
+			move $a0, $v0
+			addi $a1, $a1,  -1
+			bne $a1, 1, faculty_loop
+			move $v0, $t3
+	jr $t9
+		
+		
+	
 	
 	
 	
